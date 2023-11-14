@@ -1,43 +1,58 @@
 package programmers.level1;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class 숫자_짝꿍 {
     public static void main(String[] args) {
-        solution("100", "203045");
+        solution("5525", "1255");
     }
 
 
     public static String solution(String X, String Y) {
-        StringBuilder answer = new StringBuilder();
-        StringBuilder xString = new StringBuilder(X);
-        StringBuilder yString = new StringBuilder(Y);
-        PriorityQueue<String> queue = new PriorityQueue<>(Collections.reverseOrder());
-        for (char xCh : X.toCharArray()) {
-            int index = yString.indexOf(Character.toString(xCh));
-            if (index != -1) {
-                queue.add(String.valueOf(xCh));
-                yString.deleteCharAt(index);
+        String answer = "";
+
+        ArrayList<Integer> xList = new ArrayList<>();
+        ArrayList<Integer> yList = new ArrayList<>();
+
+        for(String str : X.split("")) {
+            xList.add(Integer.parseInt(str));
+        }
+
+        for(String str : Y.split("")) {
+            yList.add(Integer.parseInt(str));
+        }
+
+        Collections.sort(xList);
+        Collections.sort(yList);
+
+        ArrayList<Integer> resultArray = new ArrayList<>();
+
+        int yIndex = 0;
+        for (Integer x : xList) {
+            for (int i = yIndex; i < yList.size(); i++) {
+                Integer i1 = yList.get(i);
+                if(x == i1) {
+                    resultArray.add(i1);
+                    yIndex++;
+                }
             }
         }
 
-        if(queue.size() > 0) {
-            boolean zeroChecker = true;
-            // 우선순위가 높은 순으로 출력
-            while (!queue.isEmpty()) {
-                String sk = queue.poll();
-                if(!"0".equals(sk)) {
-                    zeroChecker = false;
-                }
-                answer.append(sk);
-            }
-            if(zeroChecker) answer = new StringBuilder("0");
-        } else {
-            answer.append("-1");
+        int zeroCnt = 0;
+        Collections.sort(resultArray, Collections.reverseOrder());
+        for (Integer num : resultArray) {
+            if(num == 0 ) zeroCnt++;
+            answer += num;
         }
-        return answer.toString();
+
+        if(zeroCnt == resultArray.size()) {
+            if(resultArray.size() == 0) {
+                answer = "-1";
+            } else {
+                answer = "0";
+            }
+        }
+        return answer;
     }
 }
